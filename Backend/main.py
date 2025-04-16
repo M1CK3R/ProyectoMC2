@@ -1,5 +1,5 @@
 def main():
-    pesosYLetras = []
+    pesosYLetras = [5, 34, 123, 31233, 444, 9, 10, 12]
     ordenar(pesosYLetras)
 
     for nombre in pesosYLetras:
