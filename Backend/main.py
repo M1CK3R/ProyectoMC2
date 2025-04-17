@@ -1,7 +1,7 @@
 class NodoArbolito:
-    def __init__(self, caracter, contador):
-        self.caracter = caracter
-        self.contador = contador
+    def __init__(self, letra, peso):
+        self.letra = letra
+        self.peso = peso
         self.LadoIzq = None
         self.LadoDer = None
 
@@ -17,7 +17,7 @@ def hacerElArbolito(frecuencias):
         # Se va a ordenar con método burbuja
         for vuelta in range(len(listaNodos)):
             for indice in range(len(listaNodos)-1):
-                if listaNodos[indice].contador > listaNodos[indice+1].contador:
+                if listaNodos[indice].peso > listaNodos[indice+1].peso:
                     temp = listaNodos[indice]
                     listaNodos[indice] = listaNodos[indice+1]
                     listaNodos[indice+1] = temp
@@ -25,31 +25,31 @@ def hacerElArbolito(frecuencias):
         nodoPequeño1 = listaNodos.pop(0)
         nodoPequeño2 = listaNodos.pop(0)
         
-        nuevoContador = nodoPequeño1.contador + nodoPequeño2.contador
+        nuevoContador = nodoPequeño1.peso + nodoPequeño2.peso
         nodoNuevo = NodoArbolito(None, nuevoContador)
         nodoNuevo.LadoIzq = nodoPequeño1
         nodoNuevo.LadoDer = nodoPequeño2
         
         listaNodos.append(nodoNuevo)
     
-    return listaNodos[0]
+    return listaNodos[0];
 
 def obtenerLosCodigos(raizArbol):
-    diccionarioCodigos = {}
+    codigos = {}
     
     def explorarNodos(nodoActual, codigoTemporal):
         if nodoActual is None:
-            return None
+            return None;
         
-        if nodoActual.caracter != None:
-            diccionarioCodigos[nodoActual.caracter] = codigoTemporal
-            return True
+        if nodoActual.letra != None:
+            codigos[nodoActual.letra] = codigoTemporal
+            return True;
         
         explorarNodos(nodoActual.LadoIzq, codigoTemporal + "0")
         explorarNodos(nodoActual.LadoDer, codigoTemporal + "1")
     
     explorarNodos(raizArbol, "")
-    return diccionarioCodigos
+    return codigos;
 
 def contarLetras(frase):
     listaLetras = []
@@ -61,17 +61,20 @@ def contarLetras(frase):
             if listaLetras[i] == letra:
                 listaCuentas[i] += 1
                 encontrado = True
-                break
+                break;
         if not encontrado:
             listaLetras.append(letra)
-            listaCuentas.append(1)
+            listaCuentas.append(1);
     
+
+
     resultadoFinal = []
     for j in range(len(listaLetras)):
         resultadoFinal.append( (listaLetras[j], listaCuentas[j]) )
     
-    return resultadoFinal
 
+
+    return list(zip(listaLetras, listaCuentas))
 
 def quicksort(lista, inicio, final):
     if inicio >= final:
@@ -102,12 +105,20 @@ def ordenarListaPorQuicksort(lista):
 
     return quicksort(lista, 0, len(lista)-1)
 
+
+def getArbolito(palabra):
+    frecuencias = contarLetras(palabra)
+    return hacerElArbolito(frecuencias)
+
+
 def main():
     textoUsuario = str(input("Ingresar una palabra: "))
     
     pesosYLetras = contarLetras(textoUsuario)
     
     copiaFrecuencias = pesosYLetras.copy()
+
+
     ordenarListaPorQuicksort(copiaFrecuencias)
     
     arbolito = hacerElArbolito(copiaFrecuencias)
