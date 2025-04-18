@@ -8,6 +8,9 @@ def dibujarArbolito(nodo):
     while pila:
         nodoActual, nombre = pila.pop();
         
+        if nodoActual is None:
+            continue;
+
         if nodoActual.letra:
             etiqueta = f"{nodoActual.letra} ({nodoActual.peso})"
         
@@ -26,8 +29,8 @@ def dibujarArbolito(nodo):
             dibujo.edge(nombre, nombreDerecho, label='1');
             pila.append( (nodoActual.LadoDer, nombreDerecho) );
 
-    dibujo.render("arbol", view=True, format='png', cleanup=True);
-    print("El árbol ha sido dibujado y guardado como 'arbol.png'.");
+    
+    return dibujo;
 
 if __name__ == "__main__":
 

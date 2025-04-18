@@ -1,35 +1,47 @@
 from flask import Flask, jsonify, request, send_from_directory
 from main import getArbolito, obtenerLosCodigos
+from flask_cors import CORS
 from graficarArbol import dibujarArbolito
 import os
 import uuid
 
 app = Flask(__name__)
+CORS(app)
 app.config['STATIC_FOLDER'] = 'static'
 
-# Crear carpeta para guardar imágenes
 os.makedirs(app.config['STATIC_FOLDER'], exist_ok=True)
 
 @app.route('/encode', methods=['POST'])
 def procesarPalabra():
     try:
-        # Obtener palabra del cuerpo de la solicitud
+        # Verificar si se recibió JSON
+        if not request.is_json:
+            return jsonify({"error": "Se esperaba JSON"}), 400
+
         datos = request.get_json()
-        palabra = datos.get('palabra', '')
+        
+        if 'palabra' not in datos:
+            return jsonify({"error": "Falta el campo 'palabra'"}), 400
+            
+        palabra = datos['palabra']
         
         if not palabra:
             return jsonify({"error": "Debes enviar una palabra"}), 400
         
-        # Generar códigos Huffman
         arbol = getArbolito(palabra)
         codigos = obtenerLosCodigos(arbol)
         
-        # Generar nombre único para la imagen
         nombreArchivo = f"arbol_{uuid.uuid4().hex}"
-        rutaImagen = os.path.join(app.config['STATIC_FOLDER'], nombreArchivo)
         
-        # Dibujar y guardar el árbol
-        dibujarArbolito(arbol).render(rutaImagen, format='png', cleanup=True)
+        grafico = dibujarArbolito(arbol)
+
+        if grafico is None:
+            return jsonify({"error": "No se pudo generar el gráfico del árbol"}), 500
+        
+        rutaImagen = os.path.join(app.config['STATIC_FOLDER'], nombreArchivo)
+
+        grafico.render(rutaImagen, format='png', cleanup=True)  # Render aquí
+
         
         return jsonify({
             "palabra": palabra,
@@ -38,7 +50,7 @@ def procesarPalabra():
         })
     
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"Error interno: {str(e)}"}), 500
 
 @app.route('/imagen/<nombre>')
 def obtener_imagen(nombre):
