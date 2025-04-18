@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { jsPDF } from "jspdf";
 import './EstiloHuffman.css';
-//import imagen from './6443cd47-1a56-4a49-be69-e42136e9fbf9.jpg'; //
 
 export default function HuffmanPage() {
   const [mensaje, setMensaje] = useState('');
@@ -17,7 +16,7 @@ export default function HuffmanPage() {
       }
 
 
-      
+
       try {
           setError('');
           
