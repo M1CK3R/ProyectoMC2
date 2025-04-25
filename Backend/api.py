@@ -11,7 +11,7 @@ app.config['STATIC_FOLDER'] = 'static'
 
 os.makedirs(app.config['STATIC_FOLDER'], exist_ok=True)
 
-@app.route('/encode', methods=['POST'])
+@app.route('/codificar', methods=['POST'])
 def procesarPalabra():
     try:
         # Verificar si se recibió JSON

@@ -20,7 +20,7 @@ export default function HuffmanPage() {
       try {
           setError('');
           
-          const respuesta = await fetch('http://localhost:5000/encode', {
+          const respuesta = await fetch('http://localhost:5000/codificar', {
               method: 'POST',
               headers: {
                   'Content-Type': 'application/json',
